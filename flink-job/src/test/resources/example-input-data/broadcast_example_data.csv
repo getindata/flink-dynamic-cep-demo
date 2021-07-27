@@ -1,0 +1,3 @@
+1970-01-01 00:00:05|SELECT msisdn, eventDate FROM source_table WHERE eventDate = '1970-01-01 00:00:30'
+1970-01-01 00:00:15|SELECT msisdn, eventDate FROM source_table WHERE 1=1
+1970-01-01 00:00:35|SELECT msisdn, balanceBefore, balanceAfter FROM source_table WHERE 1=1
