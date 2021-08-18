@@ -18,25 +18,27 @@
 package com.ververica.demo.backend.datasource;
 
 import com.google.common.base.Preconditions;
+import lombok.extern.slf4j.Slf4j;
 
 /** Utility to throttle a thread to a given number of executions (records) per second. */
+@Slf4j
 final class Throttler {
 
   private long throttleBatchSize;
   private long nanosPerBatch;
 
   private long endOfNextBatchNanos;
-  private int currentBatch;
+  private long currentBatch;
 
-  Throttler(long maxRecordsPerSecond) {
+  Throttler(double maxRecordsPerSecond) {
     setup(maxRecordsPerSecond);
   }
 
-  public void adjustMaxRecordsPerSecond(long maxRecordsPerSecond) {
+  public void adjustMaxRecordsPerSecond(double maxRecordsPerSecond) {
     setup(maxRecordsPerSecond);
   }
 
-  private synchronized void setup(long maxRecordsPerSecond) {
+  private synchronized void setup(double maxRecordsPerSecond) {
     Preconditions.checkArgument(
         maxRecordsPerSecond == -1 || maxRecordsPerSecond > 0,
         "maxRecordsPerSecond must be positive or -1 (infinite)");
@@ -52,14 +54,18 @@ final class Throttler {
 
     if (maxRecordsPerSecond >= 10000) {
       // high rates: all throttling in intervals of 2ms
-      throttleBatchSize = (int) maxRecordsPerSecond / 500;
+      throttleBatchSize = (long) maxRecordsPerSecond / 500;
       nanosPerBatch = 2_000_000L;
     } else {
-      throttleBatchSize = ((int) (maxRecordsPerSecond / 20)) + 1;
-      nanosPerBatch = ((int) (1_000_000_000L / maxRecordsPerSecond)) * throttleBatchSize;
+      throttleBatchSize = ((long) (maxRecordsPerSecond / 20)) + 1;
+      nanosPerBatch = ((long) (1_000_000_000L / maxRecordsPerSecond)) * throttleBatchSize;
     }
     this.endOfNextBatchNanos = System.nanoTime() + nanosPerBatch;
     this.currentBatch = 0;
+    log.info("throttleBatchSize: " + throttleBatchSize);
+    log.info("nanosPerBatch: " + nanosPerBatch);
+    log.info("endOfNextBatchNanos: " + endOfNextBatchNanos);
+    log.info("currentBatch: " + currentBatch);
   }
 
   synchronized void throttle() throws InterruptedException {
@@ -72,7 +78,7 @@ final class Throttler {
     currentBatch = 0;
 
     final long now = System.nanoTime();
-    final int millisRemaining = (int) ((endOfNextBatchNanos - now) / 1_000_000);
+    final long millisRemaining = ((endOfNextBatchNanos - now) / 1_000_000);
 
     if (millisRemaining > 0) {
       endOfNextBatchNanos += nanosPerBatch;

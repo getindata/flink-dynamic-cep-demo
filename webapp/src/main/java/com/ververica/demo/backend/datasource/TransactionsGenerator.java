@@ -26,25 +26,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TransactionsGenerator implements Runnable {
 
-  private static long MAX_PAYEE_ID = 100000;
-  private static long MAX_BENEFICIARY_ID = 100000;
+  private static long MAX_PAYEE_ID = 10;
+  private static long MAX_BENEFICIARY_ID = 10;
 
   private static double MIN_PAYMENT_AMOUNT = 5d;
   private static double MAX_PAYMENT_AMOUNT = 20d;
   private final Throttler throttler;
 
   private volatile boolean running = true;
-  private Integer maxRecordsPerSecond;
 
   private Consumer<Transaction> consumer;
 
-  public TransactionsGenerator(Consumer<Transaction> consumer, int maxRecordsPerSecond) {
+  public TransactionsGenerator(Consumer<Transaction> consumer, double maxRecordsPerSecond) {
     this.consumer = consumer;
-    this.maxRecordsPerSecond = maxRecordsPerSecond;
     this.throttler = new Throttler(maxRecordsPerSecond);
   }
 
-  public void adjustMaxRecordsPerSecond(long maxRecordsPerSecond) {
+  public void adjustMaxRecordsPerSecond(double maxRecordsPerSecond) {
     throttler.adjustMaxRecordsPerSecond(maxRecordsPerSecond);
   }
 

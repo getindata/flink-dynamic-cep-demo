@@ -30,7 +30,7 @@ public class DemoTransactionsGenerator extends TransactionsGenerator {
   private BigDecimal beneficiaryLimit = new BigDecimal(10000000);
   private BigDecimal payeeBeneficiaryLimit = new BigDecimal(20000000);
 
-  public DemoTransactionsGenerator(Consumer<Transaction> consumer, int maxRecordsPerSecond) {
+  public DemoTransactionsGenerator(Consumer<Transaction> consumer, double maxRecordsPerSecond) {
     super(consumer, maxRecordsPerSecond);
   }
 

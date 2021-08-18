@@ -50,7 +50,9 @@ public class FlinkSqlService {
     kafkaTemplate.send(topic, toSend);
   }
 
-  public void deleteSql(int ruleId) throws JsonProcessingException {
-    return; // TODO
+  public void deleteSql(SqlRepositoryEvent sql) {
+    String toSend = "REMOVE," + sql.content;
+    LOGGER.info("To send: " + toSend);
+    kafkaTemplate.send(topic, toSend);
   }
 }

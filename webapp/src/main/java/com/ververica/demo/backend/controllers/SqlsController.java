@@ -17,17 +17,19 @@
 
 package com.ververica.demo.backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ververica.demo.backend.configurations.PropertyLogger;
 import com.ververica.demo.backend.repositories.SqlRepository;
 import com.ververica.demo.backend.repositories.SqlRepositoryEvent;
 import com.ververica.demo.backend.services.FlinkSqlService;
-import java.io.IOException;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -71,11 +73,16 @@ class SqlsController {
   //    return repository.findById(id).orElseThrow(() -> new RuleNotFoundException(id));
   //  }
 
-  //  @DeleteMapping("/rules/{id}")
-  //  void deleteRule(@PathVariable Integer id) throws JsonProcessingException {
-  //    repository.deleteById(id);
-  //    flinkRulesService.deleteRule(id);
-  //  }
+  @DeleteMapping("/sqls/{id}")
+  void deleteSql(@PathVariable Integer id) {
+    Optional<SqlRepositoryEvent> maybeSql = repository.findById(id);
+
+    if (maybeSql.isPresent()) {
+      SqlRepositoryEvent sqlToRemove = maybeSql.get();
+      repository.deleteById(id);
+      flinkSqlService.deleteSql(sqlToRemove);
+    }
+  }
 
   //  @DeleteMapping("/rules")
   //  void deleteAllRules() throws JsonProcessingException {

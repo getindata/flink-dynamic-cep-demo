@@ -85,7 +85,6 @@ public class SQLRunner {
 
     BroadcastEmbeddedFlinkFunction<String, TransactionEvent> embeddedFlinkFunction =
         new BroadcastEmbeddedFlinkFunction<String, TransactionEvent>(
-            "SELECT * FROM source_table WHERE 1=1",
             TypeInformation.of(new TypeHint<TransactionEvent>() {}),
             Arrays.asList(
                 "transactionId",

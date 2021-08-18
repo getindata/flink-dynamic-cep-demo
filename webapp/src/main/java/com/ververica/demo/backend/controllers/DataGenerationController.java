@@ -77,7 +77,7 @@ public class DataGenerationController {
   }
 
   @GetMapping("/api/generatorSpeed/{speed}")
-  public void setGeneratorSpeed(@PathVariable Long speed) {
+  public void setGeneratorSpeed(@PathVariable double speed) {
     log.info("Generator speed change request: " + speed);
     if (speed <= 0) {
       transactionsGenerator.cancel();

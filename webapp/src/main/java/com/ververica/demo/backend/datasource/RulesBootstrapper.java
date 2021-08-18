@@ -39,7 +39,7 @@ public class RulesBootstrapper implements ApplicationRunner {
   }
 
   public void run(ApplicationArguments args) {
-    String payload1 = "{\"content\":\"SELECT * FROM source_table WHERE 1=1\"}";
+    String payload1 = "SELECT SUM(paymentAmount)\nFROM source_table\nWHERE paymentAmount < 10";
 
     SqlRepositoryEvent sql1 = new SqlRepositoryEvent(payload1, 1);
 

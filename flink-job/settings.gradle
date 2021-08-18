@@ -16,5 +16,3 @@
  */
 
 rootProject.name = "dynamic-fraud-detection-demo"
-rootProject.name = 'flink-job'
-

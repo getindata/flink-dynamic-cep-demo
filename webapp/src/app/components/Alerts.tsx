@@ -4,9 +4,9 @@ import styled from "styled-components/macro";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Alert } from "../interfaces";
+import { Alert, Rule } from "../interfaces";
 import { CenteredContainer } from "./CenteredContainer";
-import { ScrollingCol } from "./App";
+import { ScrollingCol} from "./App";
 import { Payment, Payee, Details, Beneficiary, paymentTypeMap } from "./Transactions";
 import { Line } from "app/utils/useLines";
 
@@ -35,10 +35,9 @@ const AlertTable = styled(Table)`
     }
   }
 `;
-function compareAlerts(alertA: Alert, alertB: Alert) {
-   return alertA.timestamp - alertB.timestamp;
-}
+
 export const Alerts: FC<Props> = props => {
+
   const tooManyAlerts = props.alerts.length > 40;
 
   const handleScroll = () => {
@@ -47,7 +46,7 @@ export const Alerts: FC<Props> = props => {
 
   return (
     <ScrollingCol xs={{ size: 5, offset: 1 }} onScroll={handleScroll}>
-      {props.alerts.sort(compareAlerts).map((alert, idx) => {
+      {props.alerts.map((alert, idx) => {
         console.log(alert)
 
         return (
@@ -59,21 +58,17 @@ export const Alerts: FC<Props> = props => {
             style={{ borderColor: "#ffc107", borderWidth: 2 }}
           >
             <CardHeader>
-              Alert {alert.timestamp}
-              <Button size="sm" color="primary" onClick={props.clearAlert(idx)} className="ml-3">
-                Clear Alert
+              <Button size="sm" color="primary" onClick={props.clearAlert(idx)} className="mr-3">
+                            Clear Event
               </Button>
+              Event at timestamp {alert.timestamp}
             </CardHeader>
             <CardBody className="p-0">
               <AlertTable size="sm" bordered={true}>
                 <tbody>
                   <tr>
-                    <td>SQL</td>
-                    <td>{alert.sql}</td>
-                  </tr>
-                  <tr>
-                    <td>Response</td>
-                    <td>{alert.response.join(',')}</td>
+                    <th style={{ width: "15%" }}>Response</th>
+                    <th style={{ width: "85%" }}>{alert.response.join(',')}</th>
                   </tr>
                 </tbody>
               </AlertTable>

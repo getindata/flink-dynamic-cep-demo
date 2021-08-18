@@ -30,8 +30,27 @@ type ResponseError = {
 const sampleRules: {
   [n: number]: string;
 } = {
-
-};
+      1:`SELECT SUM(paymentAmount)
+FROM source_table
+WHERE paymentAmount > 10`,
+      2: `SELECT paymentType, MAX(paymentAmount)
+FROM source_table
+GROUP BY paymentType`,
+      3: `SELECT t.payeeId, t.first_payment, t.second_payment
+FROM source_table MATCH_RECOGNIZE (
+  PARTITION BY payeeId
+  ORDER BY user_action_time
+  MEASURES
+    FIRST(paymentAmount) AS first_payment,
+    LAST(paymentAmount) AS second_payment
+  ONE ROW PER MATCH
+  AFTER MATCH SKIP PAST LAST ROW
+  PATTERN (A B)
+  DEFINE
+    A AS paymentAmount < 100,
+    B AS paymentAmount > 100
+) AS t`
+    };
 
 const keywords = ["beneficiaryId", "payeeId", "paymentAmount", "paymentType"];
 const aggregateKeywords = ["paymentAmount", "COUNT_FLINK", "COUNT_WITH_RESET_FLINK"];
@@ -73,11 +92,24 @@ export const AddRuleModal: FC<Props> = props => {
   };
 
   const postSampleRule = (ruleId: number) => (e: MouseEvent) => {
-    const rulePayload = JSON.stringify(sampleRules[ruleId]);
-    const body = JSON.stringify({ rulePayload });
+    const content = sampleRules[ruleId];
+    console.log("Submitting sql: " + content)
+
+    const body = JSON.stringify({ content });
 
     Axios.post<Rule>("/api/sqls", body, { headers })
-      .then(response => props.setRules(rules => [...rules, { ...response.data, ref: createRef<HTMLDivElement>() }]))
+      .then(response => {
+          console.log("POST");
+          console.log(body);
+          console.log("RESPONSE");
+          console.log(response);
+          props.setRules(rules => {
+              const newRule = { ...response.data, ref: createRef<HTMLDivElement>() };
+              console.log("NEW RULE");
+              console.log(newRule);
+              return [...rules, newRule];
+          })
+      })
       .then(props.onClosed)
       .catch(setError);
   };

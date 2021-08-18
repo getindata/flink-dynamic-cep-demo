@@ -91,7 +91,7 @@ const hasAlert = (alerts: Alert[], rule: Rule) => alerts.some(alert => alert.sql
 
 export const Rules: FC<Props> = props => {
   const handleDelete = (id: number) => () => {
-    alert('Not implemented yet!');
+    Axios.delete(`/api/sqls/${id}`).then(props.clearRule(id));
   };
 
   const handleScroll = () => {
@@ -127,7 +127,7 @@ export const Rules: FC<Props> = props => {
                 Delete
               </Button>
             </CardHeader>
-            <CardFooter style={{ padding: "0.3rem" }}>
+            <CardFooter style={{ padding: "0.3rem", whiteSpace: "pre-wrap" }}>
               <em>{rule.content}</em>
             </CardFooter>
           </CenteredContainer>

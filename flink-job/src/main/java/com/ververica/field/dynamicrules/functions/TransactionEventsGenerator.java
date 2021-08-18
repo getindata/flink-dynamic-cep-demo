@@ -27,8 +27,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TransactionEventsGenerator extends BaseGenerator<TransactionEvent> {
 
-  private static long MAX_PAYEE_ID = 100;
-  private static long MAX_BENEFICIARY_ID = 100;
+  private static long MAX_PAYEE_ID = 10;
+  private static long MAX_BENEFICIARY_ID = 10;
 
   private static double MIN_PAYMENT_AMOUNT = 5d;
   private static double MAX_PAYMENT_AMOUNT = 20d;

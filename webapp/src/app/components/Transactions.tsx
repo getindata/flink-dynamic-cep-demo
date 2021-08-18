@@ -115,7 +115,7 @@ const Rocket = styled.span`
 `;
 
 const getFakeValue = (value: number) => {
-  return value <= 10 ? value : value <= 20 ? (value - 10) * 10 : (value - 20) * 100;
+  return 1 / value;
 };
 
 export const Transactions = React.memo(
@@ -124,7 +124,7 @@ export const Transactions = React.memo(
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const addTransaction = (transaction: Transaction) => setTransactions(state => [...state.slice(-33), transaction]);
 
-    const [generatorSpeed, setGeneratorSpeed] = useLocalStorage("generatorSpeed", 1);
+    const [generatorSpeed, setGeneratorSpeed] = useLocalStorage("generatorSpeed", 5);
     const handleSliderChange = (val: number) => setGeneratorSpeed(val);
 
     useUpdateEffect(() => {
@@ -157,13 +157,13 @@ export const Transactions = React.memo(
                 <Slider
                   value={generatorSpeed}
                   onChange={handleSliderChange}
-                  max={30}
-                  min={0}
+                  max={10}
+                  min={1}
                   tooltip={false}
                   step={1}
                 />
               </div>
-              <span>{getFakeValue(generatorSpeed)}</span>
+              <span>1 event every {generatorSpeed} s</span>
             </CardHeader>
             <CardBody className="p-0 mb-0" style={{ pointerEvents: "none" }}>
               <TransactionsOverlay hidden={generatorSpeed < 16}>
