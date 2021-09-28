@@ -34,10 +34,6 @@ export const Header: FC<Props> = props => {
   const startTransactions = () => fetch("/api/startTransactionsGeneration").then();
   const stopTransactions = () => fetch("/api/stopTransactionsGeneration").then();
 
-  const syncRules = () => fetch("/api/syncRules").then();
-  const clearState = () => fetch("/api/clearState").then();
-  const pushToFlink = () => fetch("/api/sqls/pushToFlink").then();
-
   return (
     <>
       <AppNavbar color="dark" dark={true}>

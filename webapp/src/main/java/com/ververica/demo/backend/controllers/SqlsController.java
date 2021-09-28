@@ -68,11 +68,6 @@ class SqlsController {
     }
   }
 
-  //  @GetMapping("/rules/{id}")
-  //  Rule one(@PathVariable Integer id) {
-  //    return repository.findById(id).orElseThrow(() -> new RuleNotFoundException(id));
-  //  }
-
   @DeleteMapping("/sqls/{id}")
   void deleteSql(@PathVariable Integer id) {
     Optional<SqlRepositoryEvent> maybeSql = repository.findById(id);
@@ -83,13 +78,4 @@ class SqlsController {
       flinkSqlService.deleteSql(sqlToRemove);
     }
   }
-
-  //  @DeleteMapping("/rules")
-  //  void deleteAllRules() throws JsonProcessingException {
-  //    List<Rule> rules = repository.findAll();
-  //    for (Rule rule : rules) {
-  //      repository.deleteById(rule.getId());
-  //      flinkRulesService.deleteRule(rule.getId());
-  //    }
-  //  }
 }

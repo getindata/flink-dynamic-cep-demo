@@ -30,9 +30,9 @@ type ResponseError = {
 const sampleRules: {
   [n: number]: string;
 } = {
-      1:`SELECT SUM(paymentAmount)
+      1:`SELECT COUNT(*)
 FROM source_table
-WHERE paymentAmount > 10`,
+WHERE paymentAmount > 20`,
       2: `SELECT paymentType, MAX(paymentAmount)
 FROM source_table
 GROUP BY paymentType`,
@@ -49,7 +49,11 @@ FROM source_table MATCH_RECOGNIZE (
   DEFINE
     A AS paymentAmount < 100,
     B AS paymentAmount > 100
-) AS t`
+) AS t`,
+    4: `SELECT AVG(paymentAmount) OVER (
+          ORDER BY user_action_time
+          ROWS BETWEEN 10 PRECEDING AND CURRENT ROW)
+        FROM source_table where paymentAmount < 20`
     };
 
 const keywords = ["beneficiaryId", "payeeId", "paymentAmount", "paymentType"];
@@ -128,19 +132,22 @@ export const AddRuleModal: FC<Props> = props => {
         <ModalBody>
           {error && <Alert color="danger">{error.error + ": " + error.message}</Alert>}
           <FieldGroup label="SQL" icon={faInfoCircle}>
-            <Input type="textarea" name="sql" bsSize="sm" />
+            <Input type="textarea" name="sql" bsSize="lg" />
           </FieldGroup>
         </ModalBody>
         <ModalFooter className="justify-content-between">
           <div>
             <Button color="secondary" onClick={postSampleRule(1)} size="sm" className="mr-2">
-              Sample Rule 1
+              COUNT Rule
             </Button>
             <Button color="secondary" onClick={postSampleRule(2)} size="sm" className="mr-2">
-              Sample Rule 2
+              GROUP BY Rule
             </Button>
             <Button color="secondary" onClick={postSampleRule(3)} size="sm" className="mr-2">
-              Sample Rule 3
+              MATCH_RECOGNIZE Rule
+            </Button>
+            <Button color="secondary" onClick={postSampleRule(4)} size="sm" className="mr-2">
+              WINDOW Rule
             </Button>
           </div>
           <div>

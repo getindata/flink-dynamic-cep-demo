@@ -52,23 +52,16 @@ public class BroadcastEmbeddedFlinkFunction<KEY, IN>
       throws IllegalAccessException, InstantiationException {
     this.startTime = System.currentTimeMillis();
     this.customLogger = new CustomTimeLogger(startTime);
-
-//    this.clusters.put(
-//        defaultSql,
-//        new BroadcastEmbeddedFlinkCluster<>(
-//            defaultSql, inTypeInfo, expressions, converterIn, assigner, startTime));
     this.inTypeInfo = inTypeInfo;
     this.expressions = expressions;
     this.converterIn = (StringConverter) converterIn.newInstance();
     this.assigner = assigner;
-//    this.defaultSql = defaultSql;
   }
 
   @Override
   public void open(Configuration parameters) throws Exception {
     super.open(parameters);
     subtaskIndex = getRuntimeContext().getIndexOfThisSubtask();
-//    clusters.get(this.defaultSql).open(generateSourcePort());
   }
 
   @Override

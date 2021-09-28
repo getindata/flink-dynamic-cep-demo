@@ -48,7 +48,6 @@ export const Alerts: FC<Props> = props => {
     <ScrollingCol xs={{ size: 5, offset: 1 }} onScroll={handleScroll}>
       {props.alerts.map((alert, idx) => {
         console.log(alert)
-
         return (
           <CenteredContainer
             key={idx}
@@ -61,14 +60,19 @@ export const Alerts: FC<Props> = props => {
               <Button size="sm" color="primary" onClick={props.clearAlert(idx)} className="mr-3">
                             Clear Event
               </Button>
-              Event at timestamp {alert.timestamp}
+              Event at {new Date(alert.timestamp).toLocaleString()}
             </CardHeader>
             <CardBody className="p-0">
               <AlertTable size="sm" bordered={true}>
                 <tbody>
                   <tr>
                     <th style={{ width: "15%" }}>Response</th>
-                    <th style={{ width: "85%" }}>{alert.response.join(',')}</th>
+                    <th style={{ width: "85%" }}>
+                    {alert.response.map(text =>{
+                       return <td><tr>{"col" + alert.response.indexOf(text).toString()}</tr><tr>{text}</tr></td>;
+                       })}
+
+                    </th>
                   </tr>
                 </tbody>
               </AlertTable>
